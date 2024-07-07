@@ -36,6 +36,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(validationErrors, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleGlobalException(Exception ex, WebRequest webRequest) {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(
+                webRequest.getDescription(false),
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(errorResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(LoanAlreadyExistsException.class)
     public ResponseEntity<ErrorResponseDto> handleLoanAlreadyExistsException(LoanAlreadyExistsException ex, WebRequest webRequest) {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(
